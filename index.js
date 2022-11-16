@@ -41,7 +41,7 @@ async function run(){
         })
 
         //reviews api for load specific email reviews
-        app.get('/orders', async(req, res) => {
+        app.get('/my-reviews', async(req, res) => {
             let query = {};
             if(req.query.email){
                 query = {
@@ -49,15 +49,23 @@ async function run(){
                 }
             }
             const cursor = reviewCollection.find(query);
-            const reviews = await cursor.toArray();
-            res.send(reviews);
+            const myReviews = await cursor.toArray();
+            res.send(myReviews);
         })
-
+         
 
         //review api for insert data in mongodb
         app.post('/reviews', async(req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
+            res.send(result);
+        })
+
+        //review delete api
+        app.delete('/reviews/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
     }
