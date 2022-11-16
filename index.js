@@ -52,6 +52,14 @@ async function run(){
             const myReviews = await cursor.toArray();
             res.send(myReviews);
         })
+
+        //specific reviews api for load specific email reviews
+        app.get('/my-reviews/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const review = await reviewCollection.findOne(query);
+            res.send(review)
+        })
          
 
         //review api for insert data in mongodb
@@ -61,8 +69,25 @@ async function run(){
             res.send(result);
         })
 
-        //review delete api
-        app.delete('/reviews/:id', async(req, res) => {
+        //my review update api
+        app.put('my-reviews/:id' , async(req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const review = req.body;
+            const option = {upsert: true}
+            const updateReview = {
+                $set : {
+                    name: review.name,
+                    image: review.image,
+                    message: review.message
+                }
+            }
+            const result = await reviewCollection.updateOne(filter, updateReview, option);
+            res.send(result);
+        })
+
+        //my review delete api
+        app.delete('/my-reviews/:id', async(req, res) => {
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const result = await reviewCollection.deleteOne(query);
