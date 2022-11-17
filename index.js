@@ -52,7 +52,7 @@ async function run(){
         //reviews api for load all reviews
         app.get('/reviews', async(req, res) => {
             const query = {};
-            const cursor = reviewCollection.find(query);
+            const cursor = reviewCollection.find(query).sort({rating : -1});
             const reviews = await cursor.toArray();
             res.send(reviews);
         })
@@ -65,7 +65,7 @@ async function run(){
                     email: req.query.email
                 }
             }
-            const cursor = reviewCollection.find(query);
+            const cursor = reviewCollection.find(query).sort({rating : -1});
             const myReviews = await cursor.toArray();
             res.send(myReviews);
         })
