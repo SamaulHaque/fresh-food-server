@@ -18,6 +18,7 @@ async function run(){
     try{
         const serviceCollection = client.db('freshFood').collection('services');
         const reviewCollection = client.db('freshFood').collection('reviews')
+        
         app.get('/services', async(req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query);
@@ -30,6 +31,13 @@ async function run(){
             const query = {_id: ObjectId(id)};
             const service = await serviceCollection.findOne(query);
             res.send(service)
+        });
+
+        //add services post api
+        app.post('/add-services', async(req, res) => {
+            const service = req.body;
+            const result = serviceCollection.insertOne(service);
+            res.send(result);
         });
 
         //reviews api for load all reviews
