@@ -19,7 +19,16 @@ async function run(){
         const serviceCollection = client.db('freshFood').collection('services');
         const reviewCollection = client.db('freshFood').collection('reviews')
         
+        //limited services api
         app.get('/services', async(req, res) => {
+            const query = {}
+            const cursor = serviceCollection.find(query);
+            const services = await cursor.limit(3).toArray();
+            res.send(services);
+        });
+
+        //all services api
+        app.get('/my-all-services', async(req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
